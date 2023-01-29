@@ -3,6 +3,11 @@ import './style.css';
 const form = document.querySelector('form');
 const searchBar = document.querySelector('input');
 const submitButton = document.querySelector('[type=submit]');
+let location;
+
+function clearInput() {
+    searchBar.value = '';
+}
 
 function showSearchError() {
     if (searchBar.validity.valueMissing) {
@@ -17,11 +22,9 @@ function showSearchError() {
 }
 
 function validateInput() {
-    let location;
-
     if (form.checkValidity()) {
         location = searchBar.value;
-        console.log(location);
+        clearInput();
     } else {
         showSearchError();
     }
