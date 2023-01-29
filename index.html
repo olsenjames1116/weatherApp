@@ -8,6 +8,85 @@
         <title>Weather App</title>
     </head>
     <body>
-        
+        <div class="header">
+            <h1></h1>
+        </div>
+
+        <div class="content">
+            <form novalidate>
+                <label for="search">Search location:</label>
+                <input type="text" id="search" required>
+
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+            <div class="weather">
+                <div class="dateTime">
+                    <span id="date"></span>
+                    <span id="time"></span>
+                </div>
+
+                <div class="temp">
+                    <span id="temp"></span>
+                    <div class="feel">
+                        <span>Feels Like:</span>
+                        <span></span>
+                        <span class="units"></span>
+                    </div>
+
+                    <div class="high">
+                        <span>High:</span>
+                        <span></span>
+                        <span class="units"></span>
+                    </div>
+
+                    <div class="low">
+                        <span>Low:</span>
+                        <span></span>
+                        <span class="units"></span>
+                    </div>
+
+                    <div>
+                        <button type="button">Convert Temp</button>
+                    </div>
+                </div>
+
+                <div class="conditions">
+                    <img id="weatherIcon">
+                    <p id="description"></p>
+                </div>
+
+                <div class="details">
+                    <div class="wind">
+                        <span>Wind:</span>
+                        <span id="direction"></span>
+                        <span id="speed"></span>
+                        <span id="units"></span>
+
+                        <div>
+                            <button type="button">Convert Wind Speed</button>
+                        </div>
+                    </div>
+
+                    <div class="humidity">
+                        <span>Humidity:</span>
+                        <span id="humidity"></span>
+                        <span>%</span>
+                    </div>
+
+                    <div class="pressure">
+                        <span>Pressure:</span>
+                        <span id="pressure"></span>
+                        <span>"</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Author</p>
+            <p>Sources</p>
+        </div>
     </body>
 </html>
