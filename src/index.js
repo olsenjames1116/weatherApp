@@ -1,4 +1,5 @@
 import './style.css';
+import earth from './images/earth.png';
 import { location, validateInput } from './validate';
 
 const submitButton = document.querySelector('[type=submit]');
@@ -32,8 +33,21 @@ function displayTemps(currentTemp, feelTemp, highTemp, lowTemp) {
     lowTempElement.textContent = `${lowTemp}`;
 }
 
+async function displayWeatherIcon(icon) {
+    const weatherIconElement = document.querySelector('img#weatherIcon');
+    try {
+    const image = await fetch(`http://openweathermap.org/img/wn/${icon}@2x.png`);
+    const {url} = image;
+    weatherIconElement.src = url;
+    } catch(error) {
+        weatherIconElement.src = earth;
+        alert(error);
+    }
+}
+
 function displayWeather(data) {
     displayTemps(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min);
+    displayWeatherIcon(data.weather[0].icon);
 }
 
 function displayResults(data) {
