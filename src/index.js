@@ -18,9 +18,28 @@ function displayDateTime() {
     timeElement.textContent = `${currentDate.getHours()}:${currentDate.getMinutes()}`;
 }
 
+function displayTemps(currentTemp, feelTemp, highTemp, lowTemp) {
+    const currentTempElement = document.querySelector('div.temp>span:first-child');
+    currentTempElement.textContent = `${currentTemp}`;
+
+    const feelTempElement = document.querySelector('div.feel>span:nth-child(2)');
+    feelTempElement.textContent = `${feelTemp}`;
+
+    const highTempElement = document.querySelector('div.high>span:nth-child(2)');
+    highTempElement.textContent = `${highTemp}`;
+
+    const lowTempElement = document.querySelector('div.low>span:nth-child(2)');
+    lowTempElement.textContent = `${lowTemp}`;
+}
+
+function displayWeather(data) {
+    displayTemps(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min);
+}
+
 function displayResults(data) {
     displayLocation(data.name, data.sys.country);
     displayDateTime();
+    displayWeather(data);
 }
 
 async function getWeather() {
