@@ -61,10 +61,16 @@ function displayDescription(description) {
     descriptionElement.textContent = descriptionFormatted;
 }
 
+function displayHumidity(humidity) {
+    const humidityElement = document.querySelector('span#humidity');
+    humidityElement.textContent = `${humidity}%`;
+}
+
 function displayWeather(data) {
     displayTemps(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min);
     displayWeatherIcon(data.weather[0].icon);
     displayDescription(data.weather[0].description);
+    displayHumidity(data.main.humidity);
 }
 
 function displayResults(data) {
