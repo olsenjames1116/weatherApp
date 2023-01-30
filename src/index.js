@@ -67,8 +67,13 @@ function displayHumidity(humidity) {
 }
 
 function displayWind(direction, speed, units) {
-    const windElement = document.querySelector('div.wind>span:nth-child(2)');
+    const windElement = document.querySelector('span#wind');
     windElement.textContent = `${direction} ${speed} ${units}`;
+}
+
+function displayPressure(pressure) {
+    const pressureElement = document.querySelector('span#pressure');
+    pressureElement.textContent = `${pressure}"`;
 }
 
 function displayWeather(data) {
@@ -77,6 +82,7 @@ function displayWeather(data) {
     displayDescription(data.weather[0].description);
     displayHumidity(data.main.humidity);
     displayWind(data.wind.deg, data.wind.speed, 'm/s');
+    displayPressure(data.main.pressure);
 }
 
 function displayResults(data) {
