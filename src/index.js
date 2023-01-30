@@ -45,9 +45,26 @@ async function displayWeatherIcon(icon) {
     }
 }
 
+function capitalizeFirstLetter(string) {
+    const words = string.split(' ');
+
+    for(let i = 0; i < words.length; i += 1) {
+        words[i] = words[i][0].toUpperCase() + words[i].substring(1);
+    }
+
+    return words.join(' ');
+}
+
+function displayDescription(description) {
+    const descriptionElement = document.querySelector('p#description');
+    const descriptionFormatted = capitalizeFirstLetter(description);
+    descriptionElement.textContent = descriptionFormatted;
+}
+
 function displayWeather(data) {
     displayTemps(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min);
     displayWeatherIcon(data.weather[0].icon);
+    displayDescription(data.weather[0].description);
 }
 
 function displayResults(data) {
