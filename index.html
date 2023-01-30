@@ -15,7 +15,12 @@
     <div class="content">
       <form novalidate>
         <label for="search">Search location:</label>
-        <input type="text" id="search" pattern="^[a-zA-Z]+$" required />
+        <input
+          type="text"
+          id="search"
+          pattern="^[a-zA-Z\s]+,[a-zA-Z\s]+$|[a-zA-Z]+$"
+          required
+        />
 
         <div>
           <button type="submit">Submit</button>
