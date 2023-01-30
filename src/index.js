@@ -66,11 +66,17 @@ function displayHumidity(humidity) {
     humidityElement.textContent = `${humidity}%`;
 }
 
+function displayWind(direction, speed, units) {
+    const windElement = document.querySelector('div.wind>span:nth-child(2)');
+    windElement.textContent = `${direction} ${speed} ${units}`;
+}
+
 function displayWeather(data) {
     displayTemps(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min);
     displayWeatherIcon(data.weather[0].icon);
     displayDescription(data.weather[0].description);
     displayHumidity(data.main.humidity);
+    displayWind(data.wind.deg, data.wind.speed, 'm/s');
 }
 
 function displayResults(data) {
