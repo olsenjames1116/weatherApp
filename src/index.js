@@ -8,8 +8,19 @@ function displayLocation(city, country) {
     header.textContent = `${city}, ${country}`;
 }
 
+function displayDateTime() {
+    const currentDate = new Date();
+
+    const dateElement = document.querySelector('span#date');
+    dateElement.textContent = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+    
+    const timeElement = document.querySelector('span#time');
+    timeElement.textContent = `${currentDate.getHours()}:${currentDate.getMinutes()}`;
+}
+
 function displayResults(data) {
     displayLocation(data.name, data.sys.country);
+    displayDateTime();
 }
 
 async function getWeather() {
