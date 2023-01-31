@@ -4,6 +4,56 @@ import { location, validateInput } from './validate';
 
 const submitButton = document.querySelector('[type=submit]');
 
+function convertStringToNum(...strings) {
+    const numbers = [];
+
+    strings.forEach((string) => {
+        const number = parseFloat(string);
+        numbers.push(number);
+    })
+
+    return numbers;
+}
+
+function convertTemp(currentTemp, feelTemp, highTemp, lowTemp, units) {
+    const temps = convertStringToNum(currentTemp, feelTemp, highTemp, lowTemp);
+
+    if (units === 'K') {
+        for (let i = 0; i < temps.length; i += 1) {
+            const tempKelvin = temps[i];
+            const tempFahrenheit = Math.round(1.8 * (tempKelvin - 273.15) + 32);
+            temps[i] = tempFahrenheit;
+        }
+
+        temps[4] = 'F';
+        console.table(temps);
+    } else if (units === 'F') {
+        for (let i = 0; i < temps.length; i += 1) {
+            const tempFahrenheit = temps[i];
+            const tempCelsius = Math.round(5 / 9 * (tempFahrenheit - 32));
+            temps[i] = tempCelsius;
+        }
+
+        temps[4] = 'C';
+    } else {
+        for (let i = 0; i < temps.length; i += 1) {
+            const tempCelsius = temps[i];
+            const tempFahrenheit = Math.round(tempCelsius * 9 / 5 + 32);
+            temps[i] = tempFahrenheit;
+        }
+
+        temps[4] = 'F';
+    }
+
+    return temps;
+}
+
+function convertResults(data) {
+    const temps = convertTemp(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min, 'K');
+
+    return temps;
+}
+
 function displayLocation(city, country) {
     const header = document.querySelector('div.header>h1');
     header.textContent = `${city}, ${country}`;
@@ -19,18 +69,18 @@ function displayDateTime() {
     timeElement.textContent = `${currentDate.getHours()}:${currentDate.getMinutes()}`;
 }
 
-function displayTemps(currentTemp, feelTemp, highTemp, lowTemp) {
+function displayTemps(temps) {
     const currentTempElement = document.querySelector('div.temp>span:first-child');
-    currentTempElement.textContent = `${currentTemp}`;
+    currentTempElement.textContent = `${temps[0]}\xB0${temps[4]}`;
 
     const feelTempElement = document.querySelector('div.feel>span:nth-child(2)');
-    feelTempElement.textContent = `${feelTemp}`;
+    feelTempElement.textContent = `${temps[1]}\xB0${temps[4]}`;
 
     const highTempElement = document.querySelector('div.high>span:nth-child(2)');
-    highTempElement.textContent = `${highTemp}`;
+    highTempElement.textContent = `${temps[2]}\xB0${temps[4]}`;
 
     const lowTempElement = document.querySelector('div.low>span:nth-child(2)');
-    lowTempElement.textContent = `${lowTemp}`;
+    lowTempElement.textContent = `${temps[3]}\xB0${temps[4]}`;
 }
 
 async function displayWeatherIcon(icon) {
@@ -76,8 +126,8 @@ function displayPressure(pressure) {
     pressureElement.textContent = `${pressure}"`;
 }
 
-function displayWeather(data) {
-    displayTemps(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min);
+function displayWeather(data, temps) {
+    displayTemps(temps);
     displayWeatherIcon(data.weather[0].icon);
     displayDescription(data.weather[0].description);
     displayHumidity(data.main.humidity);
@@ -85,10 +135,10 @@ function displayWeather(data) {
     displayPressure(data.main.pressure);
 }
 
-function displayResults(data) {
+function displayResults(data, temps) {
     displayLocation(data.name, data.sys.country);
     displayDateTime();
-    displayWeather(data);
+    displayWeather(data, temps);
 }
 
 async function getWeather() {
@@ -96,7 +146,8 @@ async function getWeather() {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=faefb21b364d236534cc9f8b0216f294`);
         const data = await response.json();
         console.log(data);
-        displayResults(data);
+        const temps = convertResults(data);
+        displayResults(data, temps);
     } catch(error) {
         alert(error);
     }
