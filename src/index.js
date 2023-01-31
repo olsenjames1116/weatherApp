@@ -50,9 +50,36 @@ function convertTemp() {
     console.table(temps);
 }
 
+function convertWindDirection(direction) {
+    let cardinalDirection;
+
+    if (direction >= 337.5 && direction < 22.5) {
+        cardinalDirection = 'N';
+    } else if (direction >= 22.5 && direction < 67.5) {
+        cardinalDirection = 'NE';
+    } else if (direction >= 67.5 && direction < 112.5) {
+        cardinalDirection = 'E';
+    } else if (direction >= 112.5 && direction < 157.5) {
+        cardinalDirection = 'SE';
+    } else if (direction >= 157.5 && direction < 202.5) {
+        cardinalDirection = 'S';
+    } else if (direction >= 202.5 && direction < 247.5) {
+        cardinalDirection = 'SW';
+    } else if (direction >= 247.5 && direction < 292.5) {
+        cardinalDirection = 'W';
+    } else {
+        cardinalDirection = 'NW';
+    }
+
+    return cardinalDirection;
+}
+
 function convertResults(data) {
     temps = convertStringToNum(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min);
     convertTemp();
+    const convertedDirection = convertWindDirection(data.wind.deg);
+
+    return convertedDirection;
 }
 
 function displayLocation(city, country) {
@@ -149,19 +176,19 @@ function displayPressure(pressure) {
     pressureElement.textContent = `${pressure}"`;
 }
 
-function displayWeather(data) {
+function displayWeather(data, direction) {
     displayTemps();
     displayWeatherIcon(data.weather[0].icon);
     displayDescription(data.weather[0].description);
     displayHumidity(data.main.humidity);
-    displayWind(data.wind.deg, data.wind.speed, 'm/s');
+    displayWind(direction, data.wind.speed, 'm/s');
     displayPressure(data.main.pressure);
 }
 
-function displayResults(data) {
+function displayResults(data, direction) {
     displayLocation(data.name, data.sys.country);
     displayDateTime();
-    displayWeather(data);
+    displayWeather(data, direction);
 }
 
 async function getWeather() {
@@ -169,8 +196,8 @@ async function getWeather() {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=faefb21b364d236534cc9f8b0216f294`);
         const data = await response.json();
         console.log(data);
-        convertResults(data);
-        displayResults(data);
+        const direction = convertResults(data);
+        displayResults(data, direction);
     } catch(error) {
         alert(error);
     }
