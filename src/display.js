@@ -49,13 +49,13 @@ function displayDateTime() {
 /* Displays the queried location to the page so the user can confirm they are
  looking at their requested weather data. */
 function displayLocation(city, country) {
-    const header = document.querySelector('div.header>h1');
+    const header = document.querySelector('div.content>h2');
     header.textContent = `${city}, ${country}`;
 }
 
 /* Displays all temp information from the API call and updates when the user 
 converts weather units. */
-function displayTemps(temps) {
+export function displayTemps(temps) {
     const currentTempElement = document.querySelector('div.temp>span:first-child');
     currentTempElement.textContent = `${temps[0]}\xB0${temps[4]}`;
 
@@ -99,7 +99,7 @@ function displayHumidity(humidity) {
 
 /* Displays the wind information from the API call as well as the converted wind information
     at the user's request. */
-function displayWind(direction, speed, units) {
+export function displayWind(direction, speed, units) {
     windElement.textContent = `${direction} ${speed} ${units}`;
 }
 
@@ -120,7 +120,7 @@ function displayWeather(data, results) {
 }
 
 // Calls all the display functions after the API responds.
-export default function displayResults(data, results) {
+export function displayResults(data, results) {
     displayLocation(data.name, data.sys.country);
     displayDateTime();
     displayWeather(data, results);

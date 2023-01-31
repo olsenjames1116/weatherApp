@@ -9,30 +9,37 @@
   </head>
   <body>
     <div class="header">
-      <h1></h1>
+      <img
+        src="./forecast.png"
+        alt="a weatherman standing in front of a weather map"
+      />
+      <h1>What's It Like Outside?</h1>
     </div>
 
+    <form novalidate>
+      <label for="search">Search location:</label>
+      <input
+        type="text"
+        id="search"
+        placeholder="Ex: Denver or Denver, Colorado"
+        pattern="^[a-zA-Z\s]+,[a-zA-Z\s]+$|[a-zA-Z\s]+$"
+        required
+      />
+
+      <div>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+
     <div class="content">
-      <form novalidate>
-        <label for="search">Search location:</label>
-        <input
-          type="text"
-          id="search"
-          placeholder="Ex: Denver or Denver, Colorado"
-          pattern="^[a-zA-Z\s]+,[a-zA-Z\s]+$|[a-zA-Z\s]+$"
-          required
-        />
+      <h2></h2>
 
-        <div>
-          <button type="submit">Submit</button>
-        </div>
-      </form>
+      <div class="dateTime">
+        <span id="date"></span>
+        <span id="time"></span>
+      </div>
+
       <div class="weather">
-        <div class="dateTime">
-          <span id="date"></span>
-          <span id="time"></span>
-        </div>
-
         <div class="temp">
           <span class="tempNum"></span>
           <div class="feel">
@@ -83,8 +90,13 @@
     </div>
 
     <div class="footer">
-      <p>Author</p>
-      <p>Sources</p>
+      <p>
+        Built and designed by
+        <a href="https://github.com/olsenjames1116">olsenjames1116</a>
+      </p>
+      <p>
+        Logo provided by <a href="https://icons8.com/icons/color">Icons8</a>
+      </p>
     </div>
   </body>
 </html>

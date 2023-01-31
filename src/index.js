@@ -1,6 +1,6 @@
 import './style.css';
 import { convertNodesToArray, convertTemp, convertWindUnits, convertResults } from './conversions';
-import displayResults from './display';
+import { displayTemps, displayWind, displayResults } from './display';
 import { location, validateInput } from './validate';
 
 const submitButton = document.querySelector('[type=submit]');
@@ -27,7 +27,6 @@ async function getWeather() {
     try {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=faefb21b364d236534cc9f8b0216f294`);
         const data = await response.json();
-        console.log(data);
         const results = convertResults(data);
         displayResults(data, results);
     } catch(error) {
