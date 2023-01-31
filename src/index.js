@@ -2,7 +2,9 @@ import './style.css';
 import earth from './images/earth.png';
 import { location, validateInput } from './validate';
 
+const changeTempButton = document.querySelector('div.temp>div>button');
 const submitButton = document.querySelector('[type=submit]');
+let temps = [];
 
 function convertStringToNum(...strings) {
     const numbers = [];
@@ -15,18 +17,18 @@ function convertStringToNum(...strings) {
     return numbers;
 }
 
-function convertTemp(currentTemp, feelTemp, highTemp, lowTemp, units) {
-    const temps = convertStringToNum(currentTemp, feelTemp, highTemp, lowTemp);
+function convertTemp() {
+    const units = temps[4];
 
-    if (units === 'K') {
+    if (units === 'C') {
         for (let i = 0; i < temps.length; i += 1) {
-            const tempKelvin = temps[i];
-            const tempFahrenheit = Math.round(1.8 * (tempKelvin - 273.15) + 32);
+            const tempCelsius = temps[i];
+            const tempFahrenheit = Math.round(tempCelsius * 9 / 5 + 32);
             temps[i] = tempFahrenheit;
         }
 
         temps[4] = 'F';
-        console.table(temps);
+
     } else if (units === 'F') {
         for (let i = 0; i < temps.length; i += 1) {
             const tempFahrenheit = temps[i];
@@ -37,21 +39,20 @@ function convertTemp(currentTemp, feelTemp, highTemp, lowTemp, units) {
         temps[4] = 'C';
     } else {
         for (let i = 0; i < temps.length; i += 1) {
-            const tempCelsius = temps[i];
-            const tempFahrenheit = Math.round(tempCelsius * 9 / 5 + 32);
+            const tempKelvin = temps[i];
+            const tempFahrenheit = Math.round(1.8 * (tempKelvin - 273.15) + 32);
             temps[i] = tempFahrenheit;
         }
 
         temps[4] = 'F';
     }
 
-    return temps;
+    console.table(temps);
 }
 
 function convertResults(data) {
-    const temps = convertTemp(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min, 'K');
-
-    return temps;
+    temps = convertStringToNum(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min);
+    convertTemp();
 }
 
 function displayLocation(city, country) {
@@ -61,15 +62,37 @@ function displayLocation(city, country) {
 
 function displayDateTime() {
     const currentDate = new Date();
+    
+    let month = currentDate.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`;
+    }
+
+    let date = currentDate.getDate();
+    if (date < 10) {
+        date = `0${date}`;
+    }
 
     const dateElement = document.querySelector('span#date');
-    dateElement.textContent = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+    dateElement.textContent = `${month}/${date}/${currentDate.getFullYear()}`;
     
     const timeElement = document.querySelector('span#time');
-    timeElement.textContent = `${currentDate.getHours()}:${currentDate.getMinutes()}`;
+
+    let hours = currentDate.getHours();
+
+    if (hours < 10) {
+        hours = `0${hours}`;
+    }
+
+    let minutes = currentDate.getMinutes();
+    if (minutes < 10) {
+        minutes = `0${minutes}`;
+    }
+
+    timeElement.textContent = `${hours}:${minutes}`;
 }
 
-function displayTemps(temps) {
+function displayTemps() {
     const currentTempElement = document.querySelector('div.temp>span:first-child');
     currentTempElement.textContent = `${temps[0]}\xB0${temps[4]}`;
 
@@ -126,8 +149,8 @@ function displayPressure(pressure) {
     pressureElement.textContent = `${pressure}"`;
 }
 
-function displayWeather(data, temps) {
-    displayTemps(temps);
+function displayWeather(data) {
+    displayTemps();
     displayWeatherIcon(data.weather[0].icon);
     displayDescription(data.weather[0].description);
     displayHumidity(data.main.humidity);
@@ -135,10 +158,10 @@ function displayWeather(data, temps) {
     displayPressure(data.main.pressure);
 }
 
-function displayResults(data, temps) {
+function displayResults(data) {
     displayLocation(data.name, data.sys.country);
     displayDateTime();
-    displayWeather(data, temps);
+    displayWeather(data);
 }
 
 async function getWeather() {
@@ -146,8 +169,8 @@ async function getWeather() {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=faefb21b364d236534cc9f8b0216f294`);
         const data = await response.json();
         console.log(data);
-        const temps = convertResults(data);
-        displayResults(data, temps);
+        convertResults(data);
+        displayResults(data);
     } catch(error) {
         alert(error);
     }
@@ -160,4 +183,9 @@ submitButton.addEventListener('click', (event) => {
     if (validInput) {
         getWeather();
     }
+});
+
+changeTempButton.addEventListener('click', () => {
+    convertTemp();
+    displayTemps();
 });
