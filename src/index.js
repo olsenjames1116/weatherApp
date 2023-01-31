@@ -3,10 +3,10 @@ import earth from './images/earth.png';
 import { location, validateInput } from './validate';
 
 const submitButton = document.querySelector('[type=submit]');
+const tempNums = document.querySelectorAll('span.tempNum');
 const changeTempButton = document.querySelector('div.temp>div>button');
 const windElement = document.querySelector('span#wind');
 const changeWindSpeedButton = document.querySelector('div.wind>div>button');
-let temps = [];
 
 function convertStringToNum(...strings) {
     const numbers = [];
@@ -19,10 +19,26 @@ function convertStringToNum(...strings) {
     return numbers;
 }
 
-function convertTemp() {
-    const units = temps[4];
+function convertNodesToArray(nodeList) {
+    return Array.from(nodeList);
+}
 
-    if (units === 'C') {
+function getTempText(elementArray, separator) {
+    const textArray = [];
+
+    elementArray.forEach((element) => {
+        textArray.push(element.textContent);
+    });
+
+    const arrayString = textArray.join('');
+    const temporaryArray = arrayString.split(separator);
+    return [temporaryArray[0], temporaryArray[1].substring(1, 3), temporaryArray[2].substring(1, 3), temporaryArray[3].substring(1, 3), temporaryArray[4]];
+}
+
+function convertTemp(currentTemp, feelTemp, highTemp, lowTemp, tempUnits) {
+    const temps = convertStringToNum(currentTemp, feelTemp, highTemp, lowTemp);
+
+    if (tempUnits === 'C') {
         for (let i = 0; i < temps.length; i += 1) {
             const tempCelsius = temps[i];
             const tempFahrenheit = Math.round(tempCelsius * 9 / 5 + 32);
@@ -31,7 +47,7 @@ function convertTemp() {
 
         temps[4] = 'F';
 
-    } else if (units === 'F') {
+    } else if (tempUnits === 'F') {
         for (let i = 0; i < temps.length; i += 1) {
             const tempFahrenheit = temps[i];
             const tempCelsius = Math.round(5 / 9 * (tempFahrenheit - 32));
@@ -49,7 +65,7 @@ function convertTemp() {
         temps[4] = 'F';
     }
 
-    console.table(temps);
+    return temps;
 }
 
 function convertWindDirection(direction) {
@@ -96,12 +112,11 @@ function convertWindUnits(windSpeed, units) {
 }
 
 function convertResults(data) {
-    temps = convertStringToNum(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min);
-    convertTemp();
+    const convertedTemps = convertTemp(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min, 'K');
     const convertedDirection = convertWindDirection(data.wind.deg);
     const convertedSpeedUnits = convertWindUnits(data.wind.speed);
 
-    return { convertedDirection, convertedSpeedUnits };
+    return { convertedTemps, convertedDirection, convertedSpeedUnits };
 }
 
 function displayLocation(city, country) {
@@ -141,7 +156,7 @@ function displayDateTime() {
     timeElement.textContent = `${hours}:${minutes}`;
 }
 
-function displayTemps() {
+function displayTemps(temps) {
     const currentTempElement = document.querySelector('div.temp>span:first-child');
     currentTempElement.textContent = `${temps[0]}\xB0${temps[4]}`;
 
@@ -198,7 +213,7 @@ function displayPressure(pressure) {
 }
 
 function displayWeather(data, results) {
-    displayTemps();
+    displayTemps(results.convertedTemps);
     displayWeatherIcon(data.weather[0].icon);
     displayDescription(data.weather[0].description);
     displayHumidity(data.main.humidity);
@@ -234,8 +249,10 @@ submitButton.addEventListener('click', (event) => {
 });
 
 changeTempButton.addEventListener('click', () => {
-    convertTemp();
-    displayTemps();
+    const tempElementArray = convertNodesToArray(tempNums);
+    const tempArray = getTempText(tempElementArray, '\xB0');
+    const tempNumArray = convertTemp(tempArray[0], tempArray[1], tempArray[2], tempArray[3], tempArray[4]);
+    displayTemps(tempNumArray);
 });
 
 changeWindSpeedButton.addEventListener('click', () => {
