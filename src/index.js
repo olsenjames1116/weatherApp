@@ -253,6 +253,8 @@ submitButton.addEventListener('click', (event) => {
     }
 });
 
+getWeather();
+
 changeTempButton.addEventListener('click', () => {
     const tempElementArray = convertNodesToArray(tempNums);
     const tempArray = getTempText(tempElementArray, '\xB0');

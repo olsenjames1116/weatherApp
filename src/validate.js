@@ -1,7 +1,7 @@
 const form = document.querySelector('form');
 const searchBar = document.querySelector('input');
 // eslint-disable-next-line import/no-mutable-exports
-let location;
+let location = 'New York';
 
 function clearInput() {
     searchBar.value = '';
