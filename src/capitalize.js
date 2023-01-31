@@ -1,3 +1,4 @@
+// Capitalizes only the first letter to provide a more formal string
 export default function capitalizeFirstLetter(string) {
     const words = string.split(' ');
 
