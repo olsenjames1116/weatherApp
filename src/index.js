@@ -111,12 +111,17 @@ function convertWindUnits(windSpeed, units) {
     return { convertedWindSpeed, convertedUnits };
 }
 
+function convertPressure(pressure) {
+    return (pressure * 0.02953).toFixed(2);
+}
+
 function convertResults(data) {
     const convertedTemps = convertTemp(data.main.temp, data.main.feels_like, data.main.temp_max, data.main.temp_min, 'K');
     const convertedDirection = convertWindDirection(data.wind.deg);
     const convertedSpeedUnits = convertWindUnits(data.wind.speed);
+    const convertedPressure = convertPressure(data.main.pressure);
 
-    return { convertedTemps, convertedDirection, convertedSpeedUnits };
+    return { convertedTemps, convertedDirection, convertedSpeedUnits, convertedPressure };
 }
 
 function displayLocation(city, country) {
@@ -218,7 +223,7 @@ function displayWeather(data, results) {
     displayDescription(data.weather[0].description);
     displayHumidity(data.main.humidity);
     displayWind(results.convertedDirection, results.convertedSpeedUnits.convertedWindSpeed, results.convertedSpeedUnits.convertedUnits);
-    displayPressure(data.main.pressure);
+    displayPressure(results.convertedPressure);
 }
 
 function displayResults(data, results) {
