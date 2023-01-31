@@ -2,8 +2,10 @@ import './style.css';
 import earth from './images/earth.png';
 import { location, validateInput } from './validate';
 
-const changeTempButton = document.querySelector('div.temp>div>button');
 const submitButton = document.querySelector('[type=submit]');
+const changeTempButton = document.querySelector('div.temp>div>button');
+const windElement = document.querySelector('span#wind');
+const changeWindSpeedButton = document.querySelector('div.wind>div>button');
 let temps = [];
 
 function convertStringToNum(...strings) {
@@ -75,17 +77,18 @@ function convertWindDirection(direction) {
 }
 
 function convertWindUnits(windSpeed, units) {
+    const windSpeedNum = convertStringToNum(windSpeed);
     let convertedWindSpeed;
     let convertedUnits;
 
     if (units === 'kph') {
-        convertedWindSpeed = Math.round(windSpeed * 0.621371);
+        convertedWindSpeed = Math.round(windSpeedNum * 0.621371);
         convertedUnits = 'mph';
     } else if (units === 'mph') {
-        convertedWindSpeed = Math.round(windSpeed * 1.60934);
+        convertedWindSpeed = Math.round(windSpeedNum * 1.60934);
         convertedUnits = 'kph';
     } else {
-        convertedWindSpeed = Math.round(windSpeed * 2.23694);
+        convertedWindSpeed = Math.round(windSpeedNum * 2.23694);
         convertedUnits = 'mph';
     }
 
@@ -186,7 +189,6 @@ function displayHumidity(humidity) {
 }
 
 function displayWind(direction, speed, units) {
-    const windElement = document.querySelector('span#wind');
     windElement.textContent = `${direction} ${speed} ${units}`;
 }
 
@@ -234,4 +236,10 @@ submitButton.addEventListener('click', (event) => {
 changeTempButton.addEventListener('click', () => {
     convertTemp();
     displayTemps();
+});
+
+changeWindSpeedButton.addEventListener('click', () => {
+    const windArray = windElement.textContent.split(' ');
+    const convertedWind = convertWindUnits(windArray[1], windArray[2]);
+    displayWind(windArray[0], convertedWind.convertedWindSpeed, convertedWind.convertedUnits);
 });
