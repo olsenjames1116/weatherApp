@@ -74,8 +74,9 @@ export function displayTemps(temps) {
 async function displayWeatherIcon(icon) {
     const weatherIconElement = document.querySelector('img#weatherIcon');
     try {
-    const {url} = image;
-    weatherIconElement.src = url;
+        const image = await fetch(`https://openweathermap.org/img/wn/${icon}@2x.png`);
+        const {url} = image;
+        weatherIconElement.src = url;
     } catch(error) {
         // Displays a default icon and error if the requested icon cannot be reached
         weatherIconElement.src = earth;
